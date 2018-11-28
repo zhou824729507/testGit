@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Video Preview</title>
+</head>
+
+<body>
+<script type="text/javascript" src="preview.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
+
+<button onclick="showVideo()">开始预览</button><button onclick="stopVideo()">停止预览</button><button onclick="setWindowsLoyout()">窗口布局</button>
+<div id="message">
+</div>
+<div style="display:block;width:425px;height:300px;" id="preview_1"></div>
+</body>
+
+<script type="text/javascript">
+
+    function tokenCallEvent(){
+        videoPreview.onmessage = function(event){
+            ocx.setToken(1, event.data);
+            console.log("setInterval")
+        }
+    }
+    var preview = {
+        divId: "preview_1",
+        //theme属性如果不用的话,得把preview.js里面初始化时相关的方法删掉;
+        theme: "blue"
+    }
+    ocx = new PreviewOCX(preview);
+    ocx.setWindowsLayout("1");
+    //设置token回调,这个回调必须写,用来注册控件
+    ocx.registerCallback(PREVIEW_EVENT_TOKEN, tokenCallEvent);
+
+
+
+    var websocket = null;
+
+    //判断当前浏览器是否支持WebSocket
+    if('WebSocket' in window){
+        videoPreview = new WebSocket("ws://localhost:8080/websocket");
+    }
+    else{
+        alert('Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    videoPreview.onerror = function(){
+    };
+
+    //连接成功建立的回调方法
+    videoPreview.onopen = function(event){
+    }
+
+    //接收到消息的回调方法
+    videoPreview.onmessage = function(event){
+        console.log(event.data);
+    }
+
+    //连接关闭的回调方法
+    videoPreview.onclose = function(){
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function(){
+        videoPreview.close();
+    }
+
+    //预览视频
+    function showVideo(){
+        $.ajax({
+            url : "http://localhost:8080/getPreviewXml",
+            type : "get",
+            data : {indexCode : "001219"}, //001198
+
+            dataType : "text",
+                success : function (xml) {
+                    // alert(token);
+                    console.log(xml);;
+                    setToken();
+
+                    var winindex = ocx.getSelectWindow();
+                    // ocx.startPreview(winindex, xml);
+
+                    if(ocx.startPreview(winindex, xml)==0){
+                        if(ocx.setSelectWindow(winindex+1)==-1){
+                            ocx.setSelectWindow(0);
+                        }
+                    }
+
+                }
+        });
+    }
+    
+    function stopVideo() {
+        ocx.stopPreview(-1);
+    }
+
+    //选择窗口布局
+    function setWindowsLoyout() {
+        var SUCCESS = 0; /* 控件操作成功 */
+        if(ocx.setWindowsLayout("1") != SUCCESS){
+            console.log("窗口布局设置失败")
+        }else{
+            console.log("窗口布局设置成功");
+        }
+    }
+
+
+    function setToken(){
+        setInterval('tokenCallEvent()', 5000);
+    }
+    </script>
+</html>

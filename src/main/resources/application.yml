@@ -1,0 +1,11 @@
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+
+hik:
+  username: admin
+  password: 0c1b4286a7735a85fb022137b7ca27e8225b1343ce4bee22a6bbb848faf6a201
+  serverIp: 192.168.140.251
+server:
+  port: 8080

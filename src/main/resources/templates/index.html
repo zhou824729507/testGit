@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>video preview test</title>
+    <script src="preview1.js"></script>
+
+
+</head>
+
+
+<body>
+<h1>video preview test</h1>
+<script type="text/javascript" src="preview1.js"></script>
+
+<div style="display:block;width:425px;height:300px;" id="preview_1"></div>
+<script language="JavaScript">
+    function tokenCallEvent(){
+        ocx.setToken(1111,"ST-181672-0cjh5ZwtWTHwFSdZKOrc-cas")
+    }
+    var preview = {
+        divId: "preview_1",
+        //theme属性如果不用的话,得把preview.js里面初始化时相关的方法删掉;
+        theme: "blue"
+    }
+    ocx = new PreviewOCX(preview);
+    //设置token回调,这个回调必须写,用来注册控件
+    ocx.registerCallback(PREVIEW_EVENT_TOKEN, tokenCallEvent);
+
+    ocx.startPreview(2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Preview><StreamSvr><Svr type=\"3\" ip=\"192.168.140.251\" port=\"7302\" rtspPort=\"7302\"/><Svr type=\"4\" ip=\"192.168.140.251\" port=\"557\"/></StreamSvr><CamIndexCode>001198</CamIndexCode><DevIndexCode>001148</DevIndexCode><LinkType>1</LinkType><StreamType>0</StreamType><CamName>龙岗普利泰五金-排污口</CamName><UserName>admin</UserName><PassWord>di4mJRQ+/bQLuA==</PassWord><UserLevel>50</UserLevel><DevType>0</DevType><Manufacturer>0</Manufacturer><ProSeries>1</ProSeries><ChannelNo>1</ChannelNo><SubStream>MAIN</SubStream><NetZone cnid=\"1\" pnid=\"1\"/><TreatyType>SDK</TreatyType><UserId>1</UserId><VagInfo><VagIp>192.168.140.251</VagIp><VagPort>7302</VagPort></VagInfo></Preview>");
+
+</script>
+</body>
+</html>
