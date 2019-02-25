@@ -1,8 +1,11 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.0.RELEASE'
+        springBootVersion = '2.0.4.RELEASE'
     }
     repositories {
+        mavenLocal()
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven{ url "https://maven.ascs.tech/"}
         mavenCentral()
     }
     dependencies {
@@ -10,31 +13,78 @@ buildscript {
     }
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'jacoco'
+
 
 group = 'com.ascs'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = 1.8
 
+
 repositories {
-    maven {url "http://maven.aliyun.com/nexus/content/groups/public/"}
+    mavenLocal()
+    maven{ url "http://maven.aliyun.com/nexus/content/groups/public/"}
+    maven{ url "https://maven.ascs.tech/"}
     mavenCentral()
 }
 
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
 
 dependencies {
 
-    compile 'commons-httpclient:commons-httpclient:3.1'
+//    compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client')
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
+//    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '2.0.0.RELEASE'
 
-    // https://mvnrepository.com/artifact/dom4j/dom4j
-    compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    //minio
+    compile('io.minio:minio:5.0.6')
+    //swagger文档相关.
+    compile('cn.cityworks:cn-cityworks-starter-engineering:2.0.5-SNAPSHOT')
+    compile('cn.cityworks:data-core-common:1.0.0')
+    compile("cn.cityworks:cityworks-response-filter:1.0.1")
+    compile('org.springframework.data:spring-data-commons')
+    compile('tech.ascs.cityworks:controller-schema-validator:2.2.3-SNAPSHOT')
+    //服务基础相关
+    compile("org.springframework.boot:spring-boot-starter-undertow") // undertow web容器, 高性能web容器
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    //soa相关配置
+//    compile('org.springframework.cloud:spring-cloud-starter-eureka')
+//    compile('org.springframework.cloud:spring-cloud-starter-feign')
+//    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+    
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.postgresql:postgresql')
+    compile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2')
+    compile('junit:junit')
+    compile('com.github.pagehelper:pagehelper:4.1.6')
+    compile('org.springframework.boot:spring-boot-starter-cache')
 
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-    implementation('org.springframework.boot:spring-boot-starter-websocket')
-    compileOnly('org.projectlombok:lombok')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+/*
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled true
+        xml.destination new File("${buildDir}/jacocoCsv.xml")
+        csv.destination new File("${buildDir}/jacocoCsv.csv")
+        html.destination new File("${buildDir}/jacocoHtml")
+    }
+}*/
+
+
